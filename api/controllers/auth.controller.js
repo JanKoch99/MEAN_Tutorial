@@ -1,6 +1,7 @@
 import Role from "../models/Role.js"
 import User from "../models/User.js"
 import bcrypt from "bcryptjs"
+import jwt from "jsonwebtoken"
 import {CreateSuccess} from "../utils/success.js";
 import {CreateError} from "../utils/error.js";
 
@@ -27,6 +28,9 @@ export const register = async (req, res, next) => {
 export const login = async (req, res, next) => {
     try {
         const user = await User.findOne({email: req.body.email})
+            .populate('roles', 'role')
+
+        const {roles} = user
         if (!user) {
             return next(CreateError(404, 'User not found'))
         }
@@ -34,7 +38,17 @@ export const login = async (req, res, next) => {
         if (!isPasswordCorrect) {
             return next(CreateError(400, 'Password is incorrect'))
         }
-        return next(CreateSuccess(200, "User Logged in"))
+        const token = jwt.sign(
+            {id: user._id, isAdmin: user.isAdmin, roles: roles},
+            process.env.JWT_SECRET
+        )
+        res.cookie('access_token', token, {httpOnly: true})
+            .status(200)
+            .json({
+                status: 200,
+                message: 'Login Success',
+                data: user
+            })
     } catch (e) {
         return next(CreateError(500, 'Internal Server Error'))
     }
