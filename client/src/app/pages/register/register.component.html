@@ -1,4 +1,4 @@
-<div class="lg:w-3/12 mt-2 p-10 shadow-lg mx-auto">
+<div class="lg:w-3/12 mt-5 p-10 shadow-lg mx-auto">
   <h3 class="text-3xl text-center font-semibold py-5">Register</h3>
   <form [formGroup]="registerForm" class="flex flex-col">
     <div class="flex flex-col mt-4 mb-1">
@@ -27,9 +27,9 @@
       <span *ngIf="registerForm.hasError('required', 'confirmPassword') && registerForm.controls['confirmPassword'].dirty" class="text-red-500">*Confirm Password is required</span>
       <span *ngIf="registerForm.hasError('confirmPasswordValidator', 'confirmPassword')" class="text-red-500">*Password didn't matched!</span>
     </div>
-    <button [disabled]="registerForm.invalid" [class.disabled]="registerForm.invalid" (click)="register()" class="bg-indigo-500 p-2 rounded mt-3 text-white">Submit</button>
+    <button [disabled]="registerForm.invalid" [class.disabled]="registerForm.invalid" (click)="register()" class="bg-indigo-500 p-2 rounded mt-3 text-white">Register</button>
   </form>
   <div class="flex justify-center mt-5">
-    <span>Already have Account?</span><a class="text-indigo-600 ml-2 cursor-pointer">Login here</a>
+    <span>Already have Account?</span><a routerLink="/login" class="text-indigo-600 ml-2 cursor-pointer">Login here</a>
   </div>
 </div>
