@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {RouterModule} from "@angular/router";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-header',
@@ -9,6 +10,18 @@ import {RouterModule} from "@angular/router";
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit{
+  authService = inject(AuthService)
+  isLoggedIn: boolean = false
 
+  ngOnInit() {
+    this.authService.isLoggedIn$.subscribe(res => {
+      this.isLoggedIn = this.authService.isLoggedIn()
+    })
+  }
+
+  logout() {
+    localStorage.removeItem('user_id')
+    this.authService.isLoggedIn$.next(false)
+  }
 }
